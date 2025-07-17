@@ -170,7 +170,7 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
         } else {
             //treedata->Draw(Form("%s >> hist_BKG", var.Data()), Form("((Bmass < 5.289) || (Bmass > 5.449)) && %s && %s", cut.Data(), sepcCASES.Data()) ); 
              // BKG -- (notice the *!* in the first %s) Bs
-            treedata->Draw(Form("%s >> hist_BKG", var.Data()), Form("((Bmass < 5.1384) || (Bmass > 5.4216)) && %s && %s", cut.Data(), sepcCASES.Data()));
+            treedata->Draw(Form("%s >> hist_BKG", var.Data()), Form("((Bmass < 5.175) || (Bmass > 5.387)) && %s && %s", cut.Data(), sepcCASES.Data()));
             //Bu
         }
         //treeMix->Draw(Form("%s >> hist"    , var.Data()), Form(" %s && %s", cut.Data(), sepcCASES.Data()) );                          // ALL 
