@@ -11,29 +11,43 @@
 
 void plot_dataMC() {
 
+
+
 // MC FILEs
-const char * files[] = {
-   // "Bu_phat5_Bfinder.root",     //ppRef                         
+const char * files[] = {//MC FILEs
+   // "Bu_phat5_Bfinder.root"     //ppRef                         
     "Bd_phat5_Bfinder.root"       //ppRef
-    //"Bs_phat5_Bfinder.root"
+    //"Bs_phat5_Bfinder.root"       //ppRef
+   
+  // "/lstore/cms/henrique/X3872/MC_DATA/prompt_PSI2S_to_Jpsi_pipi_phat5_Bfinder.root"
+    
            
 };
+//const char* filesx={  "/lstore/cms/henrique/X3872/MC_DATA/prompt_X3872_to_Jpsi_Rho_phat5_Bfinder.root" };//MC FILEs X3872
 
-const char* files_data={
-    "/lstore/cms/henrique/Bmeson/MC_DATA/DATA_ppref_Bmeson/DATA_ppref_Bmeson.root" // Real data
+const char* files_data={//REAL DATA
+     "/lstore/cms/henrique/Bmeson/MC_DATA/DATA_ppref_Bmeson/DATA_ppref_Bmeson.root"  //Bmesons
+    //X3872
+     //"/lstore/cms/henrique/X3872/MC_DATA/DATA_ppRef_X3872.root"
 };
 
 //VARIABLES
 //VARIABLES
-//const char * variables[] = {/*"Balpha", "BQvalueuj" ,  "Bcos_dtheta", "BtrkPtimb" , "Bchi2cl" , "Btrk1dR", "Btrk2dR" , "Btrk1Pt", "Btrk2Pt" ,*/ "Bnorm_svpvDistance_2D"/*, "Bnorm_svpvDistance" , "Bnorm_trk1Dxy" ,  "Bnorm_trk2Dxy"*/};
-//const double ranges[][2] = {/*{0,3.15}  , {0,2.5}     ,      {0,1} ,      {0,1}  , {0.05,1}  ,     {0,2}  ,  {0,2}  ,     {0.5, 10} , {0.5, 10},  */  {0,85} /*,            {0,85}   ,       {-22,22}  ,          {-22,22} */};
-int SELplots = 1; //mudar para 1 com ruído e descomentar a linha acima
+//const char * variables[] = {/*"Balpha",*/  "BQvalueuj"    ,  "Bcos_dtheta", "BtrkPtimb","Bchi2cl",  "Btrk1dR", "Btrk2dR","Btrk1Pt",   "Btrk2Pt",/* "Bnorm_svpvDistance_2D", */"Bnorm_svpvDistance" , "Bnorm_trk1Dxy"  , "Bnorm_trk2Dxy", "Btktkmass", "Bpt"  ,       "By"    , "nSelectedChargedTracks"};
+//const double ranges[][2] = {/*{0,3.15}, */  {0,2.5}       ,   {0,1}      ,    {0,1},  {0.05,1},       {0,4.5},  {0,2} ,   {0.5, 10} , {0.5, 10},  /* {0,85},   */                    {0,85}   ,         {-22,22}  ,          {-22,22},  {0,2.5}  , {5, 50}  , {-2.4, 2.4}  ,   {0,150}};
+int SELplots = 0; //mudar para 1 com ruído e descomentar a linha acima
 
-const char * variables[] = {"Bmass" /*, "Btktkmass", "Bpt"  ,       "By"    , "nSelectedChargedTracks"};//*/};//comentar o Btkmass
+//const char * variables[] = {"Bmass", "Btktkmass", "Bpt"  ,       "By"    , "nSelectedChargedTracks"};//comentar o Btkmass
+//const double ranges[][2] = {{5 , 6} ,   {0,2.5}  , {5, 50}  , {-2.4, 2.4}  ,   {0,150}};
+//VARIABLES
+//VARIABLES
+//const char * variables[] = {  "Btrk1dR", "Btrk2dR"};
+//const double ranges[][2] = {   {0,4.5},    {0,2} };
+
+const char * variables[] = {"Bmass"/*, "Btktkmass", "Bpt"  ,       "By"    , "nSelectedChargedTracks"*/};//comentar o Btkmass
 const double ranges[][2] = {{5 , 6} /*,   {0,2.5}  , {5, 50}  , {-2.4, 2.4}  ,   {0,150}*/};
 //VARIABLES
 //VARIABLES
-
 /////////////////////////////////  ///////////////////////////  ////////////////
 
 TString cutlevel = ""; // "_RAW", "_ACC", "_SEL", "_TRG", "", 
@@ -52,24 +66,31 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
 
     TFile *file = TFile::Open(path_to_file.Data());
     TFile *file_data = TFile::Open(files_data);
+    //TFile*filex = TFile::Open(filesx);
     // Get the trees from the file
     TTree *treeMix;
     TTree *treedata;
-    if (path_to_file.Contains("Bs")){
+    //TTree *treex;
+
+    if (path_to_file.Contains("Bs")){                             //Bs
         file->GetObject("Bfinder/ntphi", treeMix);
         file_data->GetObject("Bfinder/ntphi", treedata);
-    } else if (path_to_file.Contains("Bd")){
+    } else if (path_to_file.Contains("Bd")){                      //Bd
         file->GetObject("Bfinder/ntKstar", treeMix);
         file_data->GetObject("Bfinder/ntKstar", treedata);
-    } else {
+    } else if(path_to_file.Contains("Bu")){                       //Bu
         file->GetObject("Bfinder/ntKp", treeMix);
         file_data->GetObject("Bfinder/ntKp", treedata);
+    }else{                                                        //X3872
+         file->GetObject("Bfinder/ntmix", treeMix);//PSI2S  
+        // filex->GetObject("Bfinder/ntmix", treex);//X3872                                       
+         file_data->GetObject("Bfinder/ntmix", treedata);
     }
 
 
     std::cout << "\n" << "Entries in treeMix: " << treeMix->GetEntries() << std::endl;
     std::cout << "\n" << "Entries in treedata: " << treedata->GetEntries() << std::endl;
-
+    //std::cout << "\n" << "Entries in treex: " << treex->GetEntries() << std::endl;
     for (int i = 0; i < nVars; ++i) {
         TString var = variables[i];
 
@@ -83,12 +104,12 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
 
         double hist_Xhigh      = ranges[i][1];
         double hist_Xlow       = ranges[i][0];
-        int hist_Nbin          = 150 ;
+        int hist_Nbin          =  150;//(hist_Xhigh - hist_Xlow)/0.005;//
         if (var == "nSelectedChargedTracks") {
             hist_Nbin = hist_Xhigh - hist_Xlow;
         } 
         double bin_length_MEV  = (hist_Xhigh - hist_Xlow) / hist_Nbin;
-        if(SELplots){ hist_Nbin = 50; }
+        if(SELplots){ hist_Nbin = 150; } // -----------------------------------------> NUMERO DE BINs PARA PLOTAR COM RUÍDO
         
         TString Xlabel ;
         if (var == "Bmass"){ 
@@ -96,6 +117,8 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
                 Xlabel = "m_{J/#Psi K^{+} K^{-}} [GeV/c^{2}]";
             } else if (path_to_file.Contains("Bd")){
                 Xlabel = "m_{J/#Psi K^{+} #pi^{-}} [GeV/c^{2}]";
+            } else if(path_to_file.Contains("PSI2S")){
+                Xlabel="m_{J/#Psi#pi^{+}#pi^{-}} [GeV/c^{2}]";
             } else {
                 Xlabel = "m_{J/#Psi K^{+}} [GeV/c^{2}]";
             }
@@ -106,7 +129,8 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
         }
 
         // Create histograms
-        TH1F *hist_SIG = new TH1F("hist_SIG"      , Form("; %s; Entries / %.3f ", Xlabel.Data(), bin_length_MEV) , hist_Nbin, hist_Xlow ,hist_Xhigh); 
+        TH1F *hist_SIG = new TH1F("hist_SIG"      , Form("; %s; Entries / %.3f ", Xlabel.Data(), bin_length_MEV) , hist_Nbin, hist_Xlow ,hist_Xhigh);
+        //TH1F *hist_sig = new TH1F("hist_sig"      , Form("; %s; Entries / %.3f ", Xlabel.Data(), bin_length_MEV) , hist_Nbin, hist_Xlow ,hist_Xhigh); 
         TH1F *hist_BKG = new TH1F("hist_BKG"      , Form("; %s; Entries / %.3f ", Xlabel.Data(), bin_length_MEV) , hist_Nbin, hist_Xlow ,hist_Xhigh);
         TH1F *hist     = new TH1F("hist"          , Form("; %s; Entries / %.3f ", Xlabel.Data(), bin_length_MEV) , hist_Nbin, hist_Xlow ,hist_Xhigh);
         TH1F *hist_SIG_WT   = new TH1F("hist_SIG_WT"  , Form("; %s; Entries / %.3f ", Xlabel.Data(), bin_length_MEV) , hist_Nbin, hist_Xlow ,hist_Xhigh);        
@@ -155,29 +179,43 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
             return;
         }                                                                                                 
 
+
         TString sepcCASES = "1";
         if (path_to_file.Contains("Bs")){ 
-            sepcCASES = "abs(Btktkmass - 1.019455) < 0.015"; // phi meson mass cut
+            sepcCASES = "abs(Btktkmass - 1.019455) < 0.015"; // phi meson mass cut 
+            treedata->Draw(Form("%s >> hist_BKG", var.Data()), Form("((Bmass < 5.289) || (Bmass > 5.449)) && %s && %s", cut.Data(), sepcCASES.Data()));
         } else if (path_to_file.Contains("Bd")){ 
             sepcCASES = "abs(Btktkmass - 0.89594) < 0.25"; // Kstar meson mass cut
-        } 
-
-        treeMix->Draw(Form("%s >> hist_SIG", var.Data()), Form(" %s && %s && %s", isMCsignal.Data(), cut.Data(), sepcCASES.Data()));  // SIG
-        if (path_to_file.Contains("Bd")){ 
-            treeMix->Draw(Form("%s >> hist_SIG_WT"  , var.Data()), Form(" (Bgen == 41000) && %s && %s", cut.Data(), sepcCASES.Data()));                              // WT component
-            treedata->Draw(Form("%s >> hist_BKG"     , var.Data()), Form(" (Bmass < 5.162) || (Bmass > 5.400) && %s && %s", cut.Data(), sepcCASES.Data()));       // BKG -- (notice the *!* in the first %s)
-            treeMix->Draw(Form("%s >> hist_SIG_BOTH", var.Data()), Form("(%s || (Bgen == 41000)) && %s && %s", isMCsignal.Data(), cut.Data(), sepcCASES.Data()));  // SIG + WT
-        } else {
-            //treedata->Draw(Form("%s >> hist_BKG", var.Data()), Form("((Bmass < 5.289) || (Bmass > 5.449)) && %s && %s", cut.Data(), sepcCASES.Data()) ); 
-             // BKG -- (notice the *!* in the first %s) Bs
-            treedata->Draw(Form("%s >> hist_BKG", var.Data()), Form("((Bmass < 5.175) || (Bmass > 5.387)) && %s && %s", cut.Data(), sepcCASES.Data()));
-            //Bu
         }
-        //treeMix->Draw(Form("%s >> hist"    , var.Data()), Form(" %s && %s", cut.Data(), sepcCASES.Data()) );                          // ALL 
-        
-        //SELECT THE acc + presel CUT 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
+         
+         //treeMix->Draw(Form("%s >> hist_SIG", var.Data()), Form("%s && %s && %s", isMCsignal.Data(), cut.Data(), sepcCASES.Data()));  // SIG
+        if (path_to_file.Contains("Bd")){ 
+            if(var== "Bmass"){treedata->Draw(Form("%s >> hist_BKG"     , var.Data()), Form(" (Balpha<0.01) && ((Bnorm_svpvDistance_2D > 16) && (Bnorm_svpvDistance_2D < 72)) && (Btrk2dR<0.6) && %s && %s", cut.Data(), sepcCASES.Data()));}//((BQvalueuj>1.1) && (BQvalueuj<1.5)) && 
+            else{
+                treeMix->Draw(Form("%s >> hist_SIG_WT"  , var.Data()), Form(" (Bgen == 41000) && %s && %s", cut.Data(), sepcCASES.Data()));                              // WT component
+	            treedata->Draw(Form("%s >> hist_BKG"     , var.Data()), Form(" ((Bmass < 5.17206) || (Bmass > 5.38686)) && (Balpha<0.05) && ((Bnorm_svpvDistance_2D > 16) && (Bnorm_svpvDistance_2D < 72)) && (Btrk2dR<0.6) &&  %s && %s", cut.Data(), sepcCASES.Data()));// ((Bmass < 5.17206) || (Bmass > 5.38686)) &&  && ((BQvalueuj>1.1) && (BQvalueuj<1.5)) 
+                treeMix->Draw(Form("%s >> hist_SIG_BOTH", var.Data()), Form("(%s || (Bgen == 41000)) && (Balpha<0.05) && ((Bnorm_svpvDistance_2D > 16) && (Bnorm_svpvDistance_2D < 72))&& (Btrk2dR<0.6) && %s && %s", isMCsignal.Data(), cut.Data(), sepcCASES.Data()));  // SIG + WT  &&((BQvalueuj>1.1) && (BQvalueuj<1.5)) 
+            }
+        } else if(path_to_file.Contains("Bu")) {
+           // treeMix->Draw(Form("%s >> hist_SIG", var.Data()), Form("(Balpha<0.008) && (Btrk1dR<1.285)  && %s && %s && %s ", isMCsignal.Data(), cut.Data(), sepcCASES.Data()));  // SIG (Balpha<0.008) && (Btrk1dR<1.285)  && 
+            //treedata->Draw(Form("%s >> hist_BKG", var.Data()), Form("((Bmass<5.17501)||(Bmass>5.38657)) && %s && %s", cut.Data(), sepcCASES.Data()));  // BKG -- (notice the *!* in the first %s)
+            treedata->Draw(Form("%s >> hist_BKG", var.Data()), Form(" (Balpha<0.008) && %s && %s", cut.Data(), sepcCASES.Data())); //(Bmass>5.17501 && Bmass<5.38657) && (Balpha<0.008) && (Btrk1dR<1.285) &&
+        }/* else if(path_to_file.Contains("Rho")) {
+            treeMix->Draw(Form("%s >> hist_SIG", var.Data()), Form("%s && %s && %s", isMCsignal.Data(), cut.Data(), sepcCASES.Data()));
+            //treex->Draw(Form("%s >> hist_sig", var.Data()), Form("%s && %s && %s", isMCsignal.Data(), cut.Data(), sepcCASES.Data()));
+           // treedata->Draw(Form("%s >> hist_BKG", var.Data()), Form("((Bmass < 3.65826) || (Bmass > 3.7156 && Bmass < 3.83176) || (Bmass > 3.91336)) && %s && %s", cut.Data(),sepcCASES.Data()));
+              treedata->Draw(Form("%s >> hist_BKG", var.Data()), Form("Bmass > 3.77369 && (( Bmass < 3.83176) || (Bmass > 3.91336)) && %s", cut.Data()));
+        } else if(path_to_file.Contains("PSI2S")){  
+            treeMix->Draw(Form("%s >> hist_SIG", var.Data()), Form("%s && %s && %s", isMCsignal.Data(), cut.Data(), sepcCASES.Data()));
+            treedata->Draw(Form("%s >> hist_BKG", var.Data()), Form(" Bmass < 3.77369 && (( Bmass < 3.65826) || (Bmass > 3.71562))  && %s", cut.Data()));
+
+              }*/
+        //treeMix->Draw(Form("%s >> hist"    , var.Data()), Form(" %s && %s", cut.Data(), sepcCASES.Data()) );                          // ALL 
+
+
+        //SELECT THE acc + presel CUT 
+        
         // Customize the Histograms
         hist->SetLineColor(kBlack);
         hist->SetLineWidth(2);
@@ -196,32 +234,52 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
         hist_BKG->SetLineColor(kBlue);
         hist_BKG->SetFillColor(kBlue);     
         hist_BKG->SetFillStyle(3358);
+        hist_BKG->SetMaximum(1.1 * hist_BKG->GetMaximum()); // Increase the max range to give some space
         //hist_BKG->SetLineStyle(2);
         //hist_BKG->SetLineWidth(2);
 
+        //hist_sig->SetLineColor(kOrange+7);
+        //hist_sig->SetFillColor(kOrange+7);
+        //hist_sig->SetFillStyle(3001);
         //hist_BKG->SetMarkerStyle(20); // Circle marker
         //hist_BKG->SetMarkerSize(.8); // Bigger dots
         // Customize the Histograms
 
-        if(SELplots==1){ //NORMALIZE
-            double nEntries_sig = hist_SIG->GetEntries();
-            double nEntries_bkg = hist_BKG->GetEntries();
-            double nEntries_sig_WT = hist_SIG_BOTH->GetEntries();
+        hist_SIG->SetName("MC_SIG");  // <--- This affects the stat box label
+        
+        hist_BKG->SetName("DATA_BKG");  // <--- Also affects the stat box
 
-            //double nEntries = hist->GetEntries();
-            if (nEntries_sig > 0) {
-                hist_SIG->Scale(1.0 / nEntries_sig);
-                hist_BKG->Scale(1.0 / nEntries_bkg);
-                hist_SIG_BOTH->Scale(1.0 / nEntries_sig_WT);
-            }
-        }
+        hist_SIG_BOTH->SetName("MC_SIG");
+        if (path_to_file.Contains("Bu")) {
+            hist_BKG->SetName("DATA ");
+        } 
+
+
+        if(path_to_file.Contains("X3872")){
+            //hist_sig->SetName("MC_SIG_X3872");
+            hist_SIG->SetName("MC_SIG_PSI2S");
+                }
+        if (SELplots == 1) { // NORMALIZE
+              double int_sig     = hist_SIG->Integral();
+             // double int_sig_x   = hist_sig->Integral();
+              double int_bkg     = hist_BKG->Integral();
+              double int_sig_wt  = hist_SIG_BOTH->Integral();
+
+            if (int_sig > 0|| int_sig_wt > 0 ||int_bkg > 0){
+                hist_SIG->Scale(1.0 / int_sig);
+                hist_BKG->Scale(1.0 / int_bkg);
+                hist_SIG_BOTH->Scale(1.0 / int_sig_wt);
+                //hist_sig->Scale(1.0 / int_sig_x);
+          }
+        } 
 
         if(1){// set the y-axis maximum if needed
             Double_t     max_val = TMath::Max(hist->GetMaximum(), TMath::Max(hist_BKG->GetMaximum(), hist_SIG->GetMaximum()));
             if(SELplots) {
                 if (path_to_file.Contains("Bd")) {
-                    max_val = TMath::Max( hist_BKG->GetMaximum(), hist_SIG_BOTH->GetMaximum()) ;
+                    max_val =TMath::Max( hist_BKG->GetMaximum(), hist_SIG_BOTH->GetMaximum()) ;
                     hist_SIG_BOTH->SetMaximum(max_val * 1.1);  // Increase the max range to give some space
+                    //hist_BKG->SetMaximum(max_val * 1.1);
                 } else {
                     max_val = TMath::Max( hist_SIG->GetMaximum(), hist_BKG->GetMaximum());
                     hist_SIG->SetMaximum(max_val * 1.1);  // Increase the max range to give some space
@@ -236,8 +294,19 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
         // Draw the histograms
          hist->SetStats(0);
         if (SELplots && path_to_file.Contains("Bd")){
-            hist_SIG_BOTH->Draw("HIST");
-        } else {
+            if (var == "Bmass"){
+                hist_BKG->Draw("HIST ");
+            }else{
+                hist_BKG->Draw("HIST ");
+                hist_SIG_BOTH->Draw("HIST SAMES");
+            }
+        } else if(SELplots && path_to_file.Contains("X3872")){
+            hist_SIG->Draw("Hist");
+            //hist_sig->Draw("HIST SAMES");   
+            hist_BKG->Draw("HIST SAMES");
+        }else if(SELplots && path_to_file.Contains("Bu")){
+            hist_BKG->Draw("HIST");
+        }else{
             hist_SIG->Draw("HIST");
             if (path_to_file.Contains("Bd")) {
                 hist_SIG_WT->Draw("HIST SAMES");
@@ -246,6 +315,7 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
         hist_BKG->Draw("HIST SAMES");
 
         if(!SELplots) hist->Draw("HIST SAME");
+        canvas->Update();
         gPad->Update();
 
         // Move and color the stat boxes
@@ -259,7 +329,7 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
             st_bkg->SetY2NDC(0.95);
             st_bkg->Draw();
         }
-        TPaveStats *st_sig = (TPaveStats*)hist_SIG->GetListOfFunctions()->FindObject("stats");
+       TPaveStats *st_sig = (TPaveStats*)hist_SIG->GetListOfFunctions()->FindObject("stats");
         if (st_sig) {
             st_sig->SetTextColor(kOrange+7);
             st_sig->SetLineColor(kOrange+7);
@@ -269,6 +339,16 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
             st_sig->SetY2NDC(0.85);
             st_sig->Draw();
         }
+        /*TPaveStats *st_sigx = (TPaveStats*)hist_sig->GetListOfFunctions()->FindObject("stats");
+        if (st_sig) {
+            st_sigx->SetTextColor(kOrange+7);
+            st_sigx->SetLineColor(kOrange+7);
+            st_sigx->SetX1NDC(0.75);
+            st_sigx->SetX2NDC(0.95);
+            st_sigx->SetY1NDC(0.75);
+            st_sigx->SetY2NDC(0.85);
+            st_sigx->Draw();
+        }*/
         TPaveStats *st_sigWT = (TPaveStats*)hist_SIG_WT->GetListOfFunctions()->FindObject("stats");
         if (st_sigWT) {
             st_sigWT->SetTextColor(kOrange);
@@ -289,8 +369,7 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
             st_sig_both->SetY2NDC(0.85);
             st_sig_both->Draw();
         }    
-        
-
+    
 
         // LATEX text
         if(0){
@@ -312,6 +391,8 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
         legend->AddEntry(hist_SIG, "MC SIG", "l");
         legend->AddEntry(hist_BKG, "MC BKG", "l");
         //legend->Draw();
+              
+
 
         // Save the canvas as an image
         TString particleNAME = "Bu";
@@ -321,9 +402,16 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
         } else if (path_to_file.Contains("Bd")){
             particleNAME = "Bd";
         } 
+        else if(path_to_file.Contains("Rho")){
+            particleNAME="X3872";
+        }else if(path_to_file.Contains("PSI2S")){
+            particleNAME="PSI2S";}
         if (path_to_file.Contains("PbPb"))  { systemNAME = "MC_PbPb_";}
 
-        canvas->SaveAs(Form("./%s%s%s_%s%s.pdf", dirNAME.Data(), systemNAME.Data() , var.Data(), particleNAME.Data(), cutlevel.Data()));
+       // canvas->SaveAs(Form("./%s%s%s_%s%s_btrk2dr_alpha0.05_nb150.pdf", dirNAME.Data(), systemNAME.Data() , var.Data(), particleNAME.Data(), cutlevel.Data()));
+        canvas->SaveAs(Form("./%s%s%s_%s%s_btrk2dr_alpha0.01_nb150_not_norm.root", dirNAME.Data(), systemNAME.Data() , var.Data(), particleNAME.Data(), cutlevel.Data()));
+        //canvas->SaveAs(Form("./%s%s%s_%s%s_optimalcut.root", dirNAME.Data(), systemNAME.Data() , var.Data(), particleNAME.Data(), cutlevel.Data()));
+
 
         // Clean up
         delete hist_SIG;
@@ -337,7 +425,7 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
 
 }
 }
-
+    
 
 int main() {
     plot_dataMC();
