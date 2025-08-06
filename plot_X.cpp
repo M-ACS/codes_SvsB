@@ -31,25 +31,23 @@ const char* files_data={//REAL DATA
 //PSI2S variable ranges
 //const char * variables[] = {"Balpha",  "BQvalueuj"    ,  "Bcos_dtheta", "BtrkPtimb",  "Bchi2cl",  "Btrk1dR",    "Btrk2dR",   "Btrk1Pt",   "Btrk2Pt", "Bnorm_svpvDistance_2D", "Bnorm_svpvDistance" , "Bnorm_trk1Dxy"  , "Bnorm_trk2Dxy", "Btktkmass", "Bpt"  ,       "By"    , "nSelectedChargedTracks"};
 //const double ranges[][2] = {{0,3.2},   {0,1.05}       ,   {0,1.05}      ,    {0,0.9},    {0,1.02}, {0,3.2},      {0,3} ,   {0, 4.6} , {0, 2.25},           {0,16.5},          {0,21.5}   ,         {-13,29}  ,          {-13,29}   ,  {0.2,2}  ,   {0, 20}  ,    {-2.3, 2.3}    ,   {0,136}};
-//X3872 variable ranges
 
+//X3872 variable ranges
 //const char * variables[] = {"Balpha",  "BQvalueuj"    ,  "Bcos_dtheta", "BtrkPtimb",  "Bchi2cl",  "Btrk1dR",    "Btrk2dR",   "Btrk1Pt",   "Btrk2Pt", "Bnorm_svpvDistance_2D", "Bnorm_svpvDistance" , "Bnorm_trk1Dxy"  , "Bnorm_trk2Dxy", "Btktkmass", "Bpt"  ,       "By"    , "nSelectedChargedTracks"};
 //const double ranges[][2] = {{0,3.2},   {0,1.3}       ,   {0,1.05}      ,    {0,0.9},    {0,1.02},   {0,3.3},     {0,3.3} ,   {0, 2.5} , {0, 3.7},           {0,8},          {0,8}   ,              {-36,44}  ,          {-15,34}   ,  {0.2,1.2}  ,   {0, 21.5}  ,    {-2.3, 2.5}    ,   {0,115}};
 
 //full variable ranges
-//const char * variables[] = {"Balpha",  "BQvalueuj"    ,  "Bcos_dtheta", "BtrkPtimb",  "Bchi2cl",  "Btrk1dR",    "Btrk2dR",   "Btrk1Pt",   "Btrk2Pt", "Bnorm_svpvDistance_2D", "Bnorm_svpvDistance" , "Bnorm_trk1Dxy"  , "Bnorm_trk2Dxy", "Btktkmass", "Bpt"  ,       "By"    , "nSelectedChargedTracks"};
-//const double ranges[][2] = {{0,3.2},   {0,1.3}       ,   {0,1.05}      ,    {0,0.9},    {0,1.02},       {0,3.3},  {0,3.3} ,   {0, 4.6} ,  {0, 3.7},           {0,16.5},          {0,21.5}   ,         {-36,44}  ,          {-15,34}   ,  {0.2,2}  ,   {0, 21.5}  ,    {-2.3, 2.5}    ,   {0,136}};
+const char * variables[] = {/*"Balpha",*/  "BQvalueuj"    ,  "Bcos_dtheta", "BtrkPtimb",  "Bchi2cl",  "Btrk1dR",    "Btrk2dR",   "Btrk1Pt",   "Btrk2Pt", "Bnorm_svpvDistance_2D", "Bnorm_svpvDistance" , "Bnorm_trk1Dxy"  , "Bnorm_trk2Dxy", "Btktkmass", "Bpt"  ,       "By"    , "nSelectedChargedTracks"};
+const double ranges[][2] = {/*{0,3.2},*/   {0,1.3}       ,   {0,1.05}      ,    {0,0.9},    {0,1.02},       {0,3.3},  {0,3.3} ,   {0, 4.6} ,  {0, 3.7},           {0,16.5},          {0,21.5}   ,         {-36,44}  ,          {-15,34}   ,  {0.2,2}  ,   {0, 21.5}  ,    {-2.3, 2.5}    ,   {0,136}};
 
 
 int SELplots = 1; //mudar para 1 com ruído e descomentar a linha acima 
 
 
 //VARIABLES
-//const char * variables[] = {  "Btrk1dR", "Btrk2dR"};
-//const double ranges[][2] = {   {0,4.5},    {0,2} };
 
-const char * variables[] = {"Bmass"};//comentar o Btkmass
-const double ranges[][2] = {3.6 , 4};
+//const char * variables[] = {"Bmass"};//comentar o Btkmass
+//const double ranges[][2] = {3.6 , 4};
 //VARIABLES
 
 
@@ -101,7 +99,7 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
             hist_Nbin = hist_Xhigh - hist_Xlow;
         } 
         double bin_length_MEV  = (hist_Xhigh - hist_Xlow) / hist_Nbin;
-        if(SELplots){ hist_Nbin = 150; } // -----------------------------------------> NUMERO DE BINs PARA PLOTAR COM RUÍDO
+        if(SELplots){ hist_Nbin = 50; } // -----------------------------------------> NUMERO DE BINs PARA PLOTAR COM RUÍDO
         
         TString Xlabel ;
         if (var == "Bmass"){ 
@@ -162,19 +160,26 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
 
         if(path_to_file.Contains("X3872")){ // X3872{
             if (var== "Bmass") {
+                //treeMix->Draw(Form("%s >> hist_SIG", var.Data()), Form("(Bchi2cl > 0.02) &&  (BQvalueuj < 0.2)&& %s && %s && %s", isMCsignal.Data(), cut.Data(), sepcCASES.Data()));//PSI2S (Bchi2cl > 0.02) && 
+                //treex->Draw(Form("%s >> hist_sig", var.Data()), Form(" (Bchi2cl > 0.02) &&  (BQvalueuj < 0.2) && %s && %s && %s", isMCsignal.Data(), cut.Data(), sepcCASES.Data()));
                 treedata->Draw(Form("%s >> hist_BKG", var.Data()), Form(" (Bchi2cl > 0.02) && (BQvalueuj < 0.2) &&  %s && %s", cut.Data(),sepcCASES.Data()));    //(Bchi2cl > 0.02) &&  
         }else{ 
-            treeMix->Draw(Form("%s >> hist_SIG", var.Data()), Form("(Bchi2cl > 0.02) &&  (Bnorm_svpvDistance_2D < 1.3) && %s && %s && %s", isMCsignal.Data(), cut.Data(), sepcCASES.Data()));//PSI2S (Bchi2cl > 0.02) && 
-            treex->Draw(Form("%s >> hist_sig", var.Data()), Form(" (Bchi2cl > 0.02) &&  (Bnorm_svpvDistance_2D < 1.3) && %s && %s && %s", isMCsignal.Data(), cut.Data(), sepcCASES.Data())); // X3872 (Bchi2cl > 0.02) &&
-            treedata->Draw(Form("%s >> hist_BKG", var.Data()), Form("((Bmass < 3.65771 ) || (Bmass >  3.71717 && Bmass <  3.83576) || (Bmass > 3.91064)) &&  (Bchi2cl > 0.02) &&  (Bnorm_svpvDistance_2D < 1.3) && %s && %s", cut.Data(),sepcCASES.Data())); //   (Bchi2cl > 0.02) && 
+            treeMix->Draw(Form("%s >> hist_SIG", var.Data()), Form(" %s && %s && %s", isMCsignal.Data(), cut.Data(), sepcCASES.Data()));//PSI2S (Bchi2cl > 0.02) &&  (BQvalueuj < 0.2) &&
+            treex->Draw(Form("%s >> hist_sig", var.Data()), Form("%s && %s && %s", isMCsignal.Data(), cut.Data(), sepcCASES.Data())); // X3872  (Bchi2cl > 0.02) &&  (BQvalueuj < 0.2) && 
+            treedata->Draw(Form("%s >> hist_BKG", var.Data()), Form("((Bmass < 3.65771 ) || (Bmass >  3.71717 && Bmass <  3.83576) || (Bmass > 3.91064)) &&  %s && %s", cut.Data(),sepcCASES.Data())); // (Bchi2cl > 0.02) && (BQvalueuj < 0.2) &&
         } }
         //SELECT THE acc + presel CUT     
         // Customize the Histograms
         hist->SetLineColor(kBlack);
         hist->SetLineWidth(2);
 
-        hist_SIG->SetLineColor(kOrange+7);
-        hist_SIG->SetFillColor(kOrange+7);    
+        //hist_SIG->SetLineColor(kOrange+7);
+        //hist_SIG->SetFillColor(kOrange+7);    
+        //hist_SIG->SetLineColor(kRed);             visible 1
+        //hist_SIG->SetFillColorAlpha(kRed, 0.35);  visible 1
+        hist_SIG->SetLineColor(kMagenta);
+        hist_SIG->SetFillColorAlpha(kMagenta, 0.35);
+        //hist_SIG->SetFillColor(kRed); visible 1
         //hist_SIG->SetFillStyle(3001); 
         //hist_SIG->SetLineWidth(2);
         //hist_SIG->SetLineStyle(2);
@@ -187,8 +192,12 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
         //hist_BKG->SetLineStyle(2);
         //hist_BKG->SetLineWidth(2);
 
-        hist_sig->SetLineColor(kOrange+7);
-        hist_sig->SetFillColor(kOrange+7);
+        //hist_sig->SetLineColor(kOrange);
+        //hist_sig->SetFillColor(kOrange);
+        //hist_sig->SetLineColor(kYellow);              visible 1
+        //hist_sig->SetFillColorAlpha(kYellow, 0.35);     visible 1
+        hist_sig->SetLineColor(kCyan);
+        hist_sig->SetFillColorAlpha(kCyan, 0.35);
         //hist_sig->SetFillStyle(3001);
         //hist_BKG->SetMarkerStyle(20); // Circle marker
         //hist_BKG->SetMarkerSize(.8); // Bigger dots
@@ -230,6 +239,8 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
          if(SELplots){
             if(var=="Bmass"){
                 hist_BKG->Draw("HIST");
+                // hist_sig->Draw("HIST SAMES");
+                //hist_BKG->Draw("HIST SAMES");
             }else{
                 hist_SIG->Draw("HIST");
                 hist_sig->Draw("HIST SAMES");
@@ -256,9 +267,12 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
         }////////////////////////////////////////////////////////////////////////////////////  PSI
        TPaveStats *st_sig = (TPaveStats*)hist_SIG->GetListOfFunctions()->FindObject("stats");
         if (st_sig) {
-            st_sig->SetTextColor(kOrange+7);
-            st_sig->SetLineColor(kOrange+7);
-            st_sig->SetX1NDC(0.75);
+            //st_sig->SetTextColor(kOrange+7);
+            //st_sig->SetLineColor(kOrange+7);
+            //st_sig->SetLineColor(kRed);         visible 1
+            st_sig->SetTextColor(kMagenta);
+            st_sig->SetLineColor(kMagenta);
+            st_sig->SetX1NDC(0.75);             
             st_sig->SetX2NDC(0.95);
             st_sig->SetY1NDC(0.75);
             st_sig->SetY2NDC(0.85);
@@ -266,8 +280,11 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
         }////////////////////////////////////////////////////////////////////////////////// X3872
         TPaveStats *st_sigx = (TPaveStats*)hist_sig->GetListOfFunctions()->FindObject("stats");
         if (st_sig) {
-            st_sigx->SetTextColor(kOrange+7);
-            st_sigx->SetLineColor(kOrange+7);
+            //st_sigx->SetTextColor(kOrange);
+            //st_sigx->SetLineColor(kOrange);
+            //st_sigx->SetTextColor(kRed);  visible 
+            st_sigx->SetTextColor(kAzure+8); //Cyan 
+            st_sigx->SetLineColor(kAzure+8); //
             st_sigx->SetX1NDC(0.75);
             st_sigx->SetX2NDC(0.95);
             st_sigx->SetY1NDC(0.65);
@@ -284,11 +301,15 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
             TLatex latex;
             latex.SetNDC();
             latex.SetTextSize(0.022);
-            latex.SetTextColor(kOrange+7); // Same as hist_SIG
-            latex.DrawLatex(0.18, 0.82, Form("N_{sig} = %.0f", Nsignal));
+           // latex.SetTextColor(kOrange+7); // Same as hist_SIG
+           //latex.SetTextColor(kRed) ;//visible 1
+            latex.SetTextColor(kMagenta);
+           latex.DrawLatex(0.18, 0.82, Form("N_{sig} = %.0f", Nsignal));
             latex.SetTextColor(kBlue);     // Same as hist_BKG
             latex.DrawLatex(0.18, 0.85, Form("N_{bkg} = %.0f", Nbkg));
-            latex.SetTextColor(kOrange+7); 
+            //latex.SetTextColor(kOrange);
+            //latex.SetTextColor(kOrange); visible 1
+            latex.SetTextColor(kAzure+8); //
             latex.DrawLatex(0.18, 0.68, Form("N_{sig X3872} = %.0f", hist_sig->GetEntries()));
         }
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -309,9 +330,10 @@ for (int ifile = 0; ifile < sizeof(files)/sizeof(files[0]); ++ifile) {
             particleNAME2="X3872";}
         if (path_to_file.Contains("PbPb"))  { systemNAME = "MC_PbPb_";}
 
-       // canvas->SaveAs(Form("./%s%s%s_%s%s_btrk2dr_alpha0.05_nb150.pdf", dirNAME.Data(), systemNAME.Data() , var.Data(), particleNAME.Data(), cutlevel.Data()));
-        canvas->SaveAs(Form("./%s%s%s_%s_%s%scut2t2.pdf", dirNAME.Data(), systemNAME.Data() , var.Data(), particleNAME1.Data(), particleNAME2.Data(), cutlevel.Data()));
-        //canvas->SaveAs(Form("./%s%s%s_%s%s_optimalcut.root", dirNAME.Data(), systemNAME.Data() , var.Data(), particleNAME.Data(), cutlevel.Data()));
+        //canvas->SaveAs(Form("./%s%s%s_%s%s_NOCUT.pdf", dirNAME.Data(), systemNAME.Data() , var.Data(), particleNAME.Data(), cutlevel.Data()));
+        canvas->SaveAs(Form("./%s%s%s_%s_%s%s_NOCUT_visible2.pdf", dirNAME.Data(), systemNAME.Data() , var.Data(), particleNAME1.Data(), particleNAME2.Data(), cutlevel.Data()));
+       //canvas->SaveAs(Form("./%s%s%s_%s_%s%scut2t2.root", dirNAME.Data(), systemNAME.Data() , var.Data(), particleNAME1.Data(), particleNAME2.Data(), cutlevel.Data()));
+       
 
 
         // Clean up
@@ -331,3 +353,4 @@ int main() {
     plot_X();
     return 0;
 }
+
